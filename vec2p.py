@@ -18,8 +18,8 @@ def states_p(input_vecs, expected_vecs, epsilon=1E-8):
     
     return softmax(dists ** -1)
 
-# measured = np.array([[0,0,1.],[1.,0,0],[0,1.,0]])
-# targets = np.array([[0,0,1.],[1.,0,0]])
+measured = np.array([[0,0,1.],[1.,0,0],[0,1.,0]])
+targets = np.array([[0,0,1.],[1.,0,0]])
 
-# outp = states_p(measured, targets, .01)
-# print(outp)
+outp = states_p(measured, targets, .01)
+print(outp)
