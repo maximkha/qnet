@@ -6,11 +6,11 @@ import functools
 
 # QBITS = 1
 # NDIM = 2**QBITS
-NDIM = 4
+NDIM = 2
 
 # # initialized so that each state has equal likelyhood
 # state_vec = np.ones(NDIM, dtype=complex) / np.sqrt(NDIM)
-state_vec = np.array([[0,1,0,1],[1,0,0,1],[0,0,0,1],[1,1,0,1]], dtype=complex)
+state_vec = np.array([[0,1],[1,0]], dtype=complex)
 state_vec = np.array([v/norm(v) for v in state_vec], dtype=complex) #norm vecs
 state_vec = state_vec**2
 
@@ -38,7 +38,7 @@ multi_forward = lambda xs, P, lay_N: np.array([forward(x, P, lay_N) for x in xs]
 
 mse = lambda target, value: np.mean(np.abs((target - value)**2))
 
-N_LAY = 2 #15#12#11
+N_LAY = 1 #15#12#11
 params = np.random.normal(0, 1, N_LAY*NDIM**2)
 
 print(f"{[np.abs(det(layer_mat(params, i))) for i in range(N_LAY)]=}")
@@ -46,7 +46,7 @@ print(f"{[np.abs(det(layer_mat(params, i))) for i in range(N_LAY)]=}")
 # out = np.zeros(NDIM, dtype=complex)
 # out[2] = 1.
 # out = np.array([[0,0,1],[1,0,1],[1,0,1],[0,0,1]], dtype=complex)
-out = np.array([[1,0,0,1],[1,0,0,1],[0,0,0,1],[0,0,0,1]], dtype=complex)
+out = np.array([[1,0],[0,1]], dtype=complex)
 out = np.array([v/norm(v) for v in out]) #norm vecs
 optim = lambda P: mse(out, multi_forward(state_vec, P, N_LAY))
 
@@ -113,8 +113,9 @@ print(f"{[np.abs(det(layer_mat(solution.x, i))) for i in range(N_LAY)]=}")
 grids = np.mgrid[0:1.01:0.01, 0:1.01:0.01]
 grid_x, grid_y = grids
 vecs = grids.reshape(2,-1).T
-inputs = np.append(vecs, np.zeros((vecs.shape[0], 1)), 1)
-inputs = np.append(inputs, np.ones((vecs.shape[0], 1)), 1)
+# inputs = np.append(vecs, np.zeros((vecs.shape[0], 1)), 1)
+# inputs = np.append(inputs, np.ones((vecs.shape[0], 1)), 1)
+inputs = vecs
 inputs = np.array([v/norm(v) for v in inputs]) #norm vecs
 # print(inputs)
 outs = multi_forward(inputs, solution.x, N_LAY)[:,0].real
@@ -122,7 +123,7 @@ outs = multi_forward(inputs, solution.x, N_LAY)[:,0].real
 # import vec2p as v2p
 # # # np.array([v/norm(v) for v in out])
 # outs = v2p.states_p(outs, np.array([v/norm(v) for v in np.array([[1,1],[0,1]])]), .01)[:, 0]
-outs /= .5
+# outs /= np.sqrt(2)/2
 
 print(f"{vecs[:, 0].shape=}")
 print(f"{vecs[:, 1].shape=}")
