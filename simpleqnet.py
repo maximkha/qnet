@@ -145,3 +145,8 @@ fig.show()
 for i in range(N_LAY):
     print(f"Exporting layer {i}")
     np.save(f"intermediate/mat{i}", layer_mat(solution.x, i).T)
+
+for i in range(N_LAY):
+    print(f"lay {i}")
+    print(f"rot mats:   {solution.x[i*NDIM*NDIM:(i + 1)*NDIM*NDIM][:-NDIM]}")
+    print(f"phase mats: {solution.x[i*NDIM*NDIM:(i + 1)*NDIM*NDIM][-NDIM:]}")

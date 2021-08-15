@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from math import comb
 from itertools import combinations
+import numpy as np
 
 class phase_transforms(nn.Module):
     def __init__(self, ndim):
@@ -13,7 +14,7 @@ class phase_transforms(nn.Module):
         return x @ self.get_mat()
 
     def get_mat(self):
-        return torch.diag(torch.exp(torch.complex(torch.zeros(self.phases.shape[0]), self.phases))).T
+        return torch.diag(torch.exp(torch.complex(torch.zeros(self.phases.shape[0]), self.phases).type(torch.cfloat))).T
 
 class plane_rotations(nn.Module):
     def __init__(self, ndim):
@@ -61,6 +62,9 @@ class qlayer(nn.Module):
     
     def get_mat(self) -> torch.Tensor:
         return self.rot1.get_mat() @ self.phase_t.get_mat() @ self.rot2.get_mat()
+    
+    def export_mat(self, file) -> None:
+        np.save(file, self.get_mat().detach().numpy())
 
     def forward(self, x:torch.Tensor) -> torch.Tensor:
         return self.m(self.vnorm(x) @ self.get_mat())
